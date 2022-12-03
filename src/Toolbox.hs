@@ -8,5 +8,11 @@ module Toolbox where
     fun fs x = case lookup x fs of 
         Just y -> y
         Nothing -> error $ "Undefined for " ++ (show x)
-    
-    
+
+    (?:) :: Maybe a -> a -> a
+    Nothing ?: e = e
+    (Just x) ?: _ = x
+
+    chunk :: Int -> [a] -> [[a]]
+    chunk _ [] = []
+    chunk n xs = take n xs : (chunk n $ drop n xs)
