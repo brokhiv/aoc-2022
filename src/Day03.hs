@@ -4,7 +4,7 @@ module Day03 where
     import Data.Text (unpack)
 
     import Common (solveDay, Day(Day))
-    import Toolbox ((?:), chunk)
+    import Toolbox
 
     test = "vJrwpWtwJgWrhcsFMMfFFhFp\njqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL\nPmmdzqPrVvPwwTWBwg\nwMqvLMZHhHMvwLHjbvcjnnSBnvTQFn\nttgJtRGJQctTZtZT\nCrZsJsPPZsGzwwsLwLmpwMDw"
         
@@ -30,7 +30,7 @@ module Day03 where
         | otherwise = match2 xs ys
 
     solve1 :: Day03 -> Integer
-    solve1 = sum . (map $ (?: 0) . (fmap priority) . match . halve)
+    solve1 = map (halve .> match .> fmap priority .> (?: 0)) .> sum
 
     match :: Eq a => [[a]] -> Maybe a
     match ([]:yss) = Nothing
@@ -39,7 +39,7 @@ module Day03 where
         | otherwise = match $ xs:yss
     
     solve2 :: Day03 -> Integer
-    solve2 = sum . (map $ (?: 0) . (fmap priority) . match) . (chunk 3)
+    solve2 = chunk 3 .> map (match .> fmap priority .> (?: 0)) .> sum
 
     day03 = Day testCases puzzle solve1 solve2
 

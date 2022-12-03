@@ -4,7 +4,7 @@ module Day02 where
     import Data.Attoparsec.Text (Parser, endOfLine, satisfy, sepBy1, space)
 
     import Common (solveDay, Day(Day))
-    import Toolbox (set, fun)
+    import Toolbox 
 
     test = "A Y\nB X\nC Z"
 
@@ -55,7 +55,8 @@ module Day02 where
                 strategy = fun [('A', Rock), ('B', Paper), ('C', Scissors)]
 
     solve1 :: [(Strategy, Char)] -> Integer
-    solve1 = sum . (map $ (uncurry eval) . (fmap $ fun [('X', Rock), ('Y', Paper), ('Z', Scissors)]))
+    -- solve1 = sum . (map $ (uncurry eval) . (fmap $ fun [('X', Rock), ('Y', Paper), ('Z', Scissors)]))
+    solve1 = map (fmap (fun [('X', Rock), ('Y', Paper), ('Z', Scissors)]) .> uncurry eval) .> sum
         where eval s r = score r + case compare r s of
                 LT -> 0
                 EQ -> 3
@@ -69,7 +70,7 @@ module Day02 where
     pick Paper LT = Rock
 
     solve2 :: [(Strategy, Char)] -> Integer
-    solve2 = sum . (map $ (uncurry eval) . (fmap $ fun [('X', LT), ('Y', EQ), ('Z', GT)]))
+    solve2 = map (fmap (fun [('X', LT), ('Y', EQ), ('Z', GT)]) .> uncurry eval) .> sum
         where eval s r = score (pick s r) + case r of
                 LT -> 0
                 EQ -> 3

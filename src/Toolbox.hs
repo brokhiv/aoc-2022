@@ -1,6 +1,8 @@
 module Toolbox where
     import Data.Attoparsec.Text (Parser, satisfy)
 
+    infixr 0 .>
+
     set :: [Char] -> Parser Char
     set xs = satisfy (\x -> x `elem` xs)
 
@@ -16,3 +18,6 @@ module Toolbox where
     chunk :: Int -> [a] -> [[a]]
     chunk _ [] = []
     chunk n xs = take n xs : (chunk n $ drop n xs)
+
+    (.>) :: (a -> b) -> (b -> c) -> (a -> c)
+    (.>) = flip (.)
