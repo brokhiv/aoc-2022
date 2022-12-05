@@ -6,13 +6,13 @@ module Common where
 
     uncurry3 f (a, b, c) = f a b c -- TODO import the right one
 
-    type TestCase a = (String, a -> Integer, Integer)
+    type TestCase a b = (String, a -> b, b)
 
-    data Day a = Day {
-        testCases :: [TestCase a],
+    data Day a b = Day {
+        testCases :: [TestCase a b],
         puzzle :: Parser a,
-        solve1 :: a -> Integer,
-        solve2 :: a -> Integer
+        solve1 :: a -> b,
+        solve2 :: a -> b
     }
 
     parse :: Parser a -> String -> a
@@ -20,11 +20,11 @@ module Common where
         Left err -> error err
         Right res -> res
 
-    runTests :: Day a -> [IO ()]
+    runTests :: Show b => Day a b -> [IO ()]
     runTests day = map (uncurry3 runTest) $ testCases day
         where runTest s f e = putStrLn $ "Expected: " ++ (show e) ++ ", got: " ++ ((show . f) $ parse (puzzle day) s)
 
-    solveDay :: Day a -> String -> IO ()
+    solveDay :: Show b => Day a b -> String -> IO ()
     solveDay day inputFile = do
         let tests = runTests day
         input <- readFile inputFile

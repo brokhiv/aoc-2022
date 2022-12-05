@@ -16,12 +16,12 @@ module Day04 where
         where   pair = (,) <$> assignment <*> (char ',' *> assignment)
                 assignment = (,) <$> decimal <*> (char '-' *> decimal)
     
-    solve1 :: Day04 -> Integer
-    solve1 = filter (\(x, y) -> x `contains` y || y `contains` x) .> length .> toInteger
+    solve1 :: Day04 -> Int
+    solve1 = filter (\(x, y) -> x `contains` y || y `contains` x) .> length
         where contains (xMin, xMax) (yMin, yMax) = (xMin <= yMin && xMax >= yMax)
     
-    solve2 :: Day04 -> Integer
-    solve2 = filter (uncurry overlap) .> length .> toInteger
+    solve2 :: Day04 -> Int
+    solve2 = filter (uncurry overlap) .> length
         where overlap (xMin, xMax) (yMin, yMax) = not $ null $ [xMin..xMax] `intersect` [yMin..yMax]
 
     day04 = Day testCases puzzle solve1 solve2

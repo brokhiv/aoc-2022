@@ -55,7 +55,6 @@ module Day02 where
                 strategy = fun [('A', Rock), ('B', Paper), ('C', Scissors)]
 
     solve1 :: [(Strategy, Char)] -> Integer
-    -- solve1 = sum . (map $ (uncurry eval) . (fmap $ fun [('X', Rock), ('Y', Paper), ('Z', Scissors)]))
     solve1 = map (fmap (fun [('X', Rock), ('Y', Paper), ('Z', Scissors)]) .> uncurry eval) .> sum
         where eval s r = score r + case compare r s of
                 LT -> 0
