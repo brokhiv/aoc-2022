@@ -45,4 +45,4 @@ module Main where
         input <- getArgs
         if input == [] then join $ (\i -> days!!(i - 1)) <$> getCurrentDay 
             else if input == ["all"] then sequence_ days
-            else days!!(((read $ headinput)::Int) - 1)
+            else days!!(((read $ head input)::Int) - 1)

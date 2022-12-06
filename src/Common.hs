@@ -4,7 +4,7 @@ module Common where
     import Data.Attoparsec.Text (Parser, parseOnly)
     import Data.Text (pack, Text)
 
-    uncurry3 f (a, b, c) = f a b c -- TODO import the right one
+    import Toolbox (uncurry3)
 
     type TestCase a b = (String, a -> b, b)
 

@@ -20,23 +20,8 @@ module Day03 where
         | isLower c = toInteger (ord c) - 96
         | otherwise = toInteger (ord c) - 38
 
-    halve :: [a] -> [[a]]
-    halve xs = chunk (length xs `div` 2) xs
-
-    match2 :: Eq a => [a] -> [a] -> Maybe a
-    match2 [] ys = Nothing
-    match2 (x:xs) ys
-        | x `elem` ys = Just x
-        | otherwise = match2 xs ys
-
     solve1 :: Day03 -> Integer
     solve1 = map (halve .> match .> fmap priority .> (?: 0)) .> sum
-
-    match :: Eq a => [[a]] -> Maybe a
-    match ([]:yss) = Nothing
-    match ((x:xs):yss)
-        | all (\ys -> x `elem` ys) yss = Just x
-        | otherwise = match $ xs:yss
     
     solve2 :: Day03 -> Integer
     solve2 = chunk 3 .> map (match .> fmap priority .> (?: 0)) .> sum

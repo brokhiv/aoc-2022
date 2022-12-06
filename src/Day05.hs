@@ -18,9 +18,6 @@ module Day05 where
                     crate = choice [Just <$> (char '[' *> letter <* char ']')
                             , const Nothing <$> string (pack "   ")]
                     instr = (,,) <$> (string (pack "move ") *> decimal) <*> (string (pack " from ") *> decimal) <*> (string (pack " to ") *> decimal)
-    
-    modifyAt :: Int -> (a -> a) -> [a] -> [a]
-    modifyAt i f xs = (take i xs) ++ (f $ xs!!i) : (drop (i+1) xs)
 
     solve1 :: Day05 -> String
     solve1 (ss, is) = map (head) $ foldl (step) ss is
