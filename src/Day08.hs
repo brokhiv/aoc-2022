@@ -1,5 +1,5 @@
 module Day08 where
-    import Data.Attoparsec.Text (Parser, digit, endOfLine, many1, sepBy1)
+    import Parsing as P
     import Data.Char (digitToInt)
     import Data.List (transpose)
 

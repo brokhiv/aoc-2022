@@ -1,7 +1,7 @@
 {-# LANGUAGE NamedFieldPuns #-}
 
 module Day02 where
-    import Data.Attoparsec.Text (Parser, endOfLine, satisfy, sepBy1, space)
+    import Parsing as P
 
     import Common (solveDay, Day(Day))
     import Toolbox 

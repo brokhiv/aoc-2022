@@ -1,5 +1,5 @@
 module Day04 where
-    import Data.Attoparsec.Text (Parser, sepBy1, char, decimal, endOfLine)
+    import Parsing as P
     import Data.List (intersect)
 
     import Common (solveDay, Day(Day))

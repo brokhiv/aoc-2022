@@ -1,18 +1,10 @@
 module Toolbox where
-    import Data.Attoparsec.Text (Parser, satisfy)
-    import qualified Data.Attoparsec.Text as T (string)
     import Data.List (findIndex, nub)
     import Data.Text (pack, unpack)
 
     infixr 0 .>
 
     uncurry3 f (a, b, c) = f a b c
-
-    set :: [Char] -> Parser Char
-    set xs = satisfy (\x -> x `elem` xs)
-
-    string :: String -> Parser String
-    string s = unpack <$> T.string (pack s)
 
     fun :: (Show a, Eq a) => [(a, b)] -> a -> b
     fun fs x = case lookup x fs of 

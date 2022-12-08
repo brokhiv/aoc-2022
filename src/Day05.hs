@@ -1,10 +1,11 @@
 module Day05 where
-    import Data.Attoparsec.Text (Parser, char, choice, decimal, endOfLine, letter, sepBy1, skipWhile, space, string)
+    import Parsing as P hiding (take)
     import Data.Text (pack)
     import Data.List (transpose)
     import Data.Maybe (catMaybes)
 
     import Common (solveDay, Day(Day))
+    import Toolbox
 
     test = "    [D]    \n[N] [C]    \n[Z] [M] [P]\n 1   2   3 \n\nmove 1 from 2 to 1\nmove 3 from 1 to 3\nmove 2 from 2 to 1\nmove 1 from 1 to 2"
         
@@ -16,8 +17,8 @@ module Day05 where
     puzzle = (,) <$> stacks <*> ((endOfLine *> skipWhile (flip elem "0123456789 ") *> endOfLine *> endOfLine) *> sepBy1 instr endOfLine)
             where   stacks = (map catMaybes . transpose) <$> sepBy1 (sepBy1 crate (char ' ')) endOfLine
                     crate = choice [Just <$> (char '[' *> letter <* char ']')
-                            , const Nothing <$> string (pack "   ")]
-                    instr = (,,) <$> (string (pack "move ") *> decimal) <*> (string (pack " from ") *> decimal) <*> (string (pack " to ") *> decimal)
+                            , const Nothing <$> string ("   ")]
+                    instr = (,,) <$> (string ("move ") *> decimal) <*> (string (" from ") *> decimal) <*> (string (" to ") *> decimal)
 
     solve1 :: Day05 -> String
     solve1 (ss, is) = map (head) $ foldl (step) ss is

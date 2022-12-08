@@ -1,5 +1,5 @@
 module Day21 where
-    import Data.Attoparsec.Text (Parser)
+    import Parsing as P
 
     import Common (solveDay, Day(Day))
 

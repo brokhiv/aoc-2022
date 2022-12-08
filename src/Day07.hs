@@ -1,6 +1,6 @@
 module Day07 where
     import Control.Applicative ((<|>), many)
-    import Data.Attoparsec.Text (Parser, char, decimal, endOfLine, inClass, letter, many1, option, takeTill, satisfy, sepBy1, space)
+    import Parsing as P
     import Data.Text (unpack)
 
     import Common (solveDay, Day(Day))

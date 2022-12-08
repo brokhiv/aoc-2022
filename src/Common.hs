@@ -1,9 +1,9 @@
 {-# LANGUAGE AllowAmbiguousTypes #-}
 
 module Common where
-    import Data.Attoparsec.Text (Parser, parseOnly)
     import Data.Text (pack, Text)
 
+    import Parsing
     import Toolbox (uncurry3)
 
     type TestCase a b = (String, a -> b, b)
@@ -14,11 +14,6 @@ module Common where
         solve1 :: a -> b,
         solve2 :: a -> b
     }
-
-    parse :: Parser a -> String -> a
-    parse p text = case (parseOnly p $ pack text) of 
-        Left err -> error err
-        Right res -> res
 
     runTests :: Show b => Day a b -> [IO ()]
     runTests day = map (uncurry3 runTest) $ testCases day

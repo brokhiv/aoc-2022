@@ -1,5 +1,5 @@
 module Day06 where
-    import Data.Attoparsec.Text (Parser, takeWhile1)
+    import Parsing as P
     import Data.Maybe (fromJust)
     import Data.Text (unpack)
 

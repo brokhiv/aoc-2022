@@ -1,5 +1,5 @@
 module Day03 where
-    import Data.Attoparsec.Text (Parser, endOfLine, letter, many1, sepBy1)
+    import Parsing as P hiding (match)
     import Data.Char (ord, isLower)
     import Data.Text (unpack)
 

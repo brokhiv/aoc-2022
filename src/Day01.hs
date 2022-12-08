@@ -1,7 +1,7 @@
 {-# LANGUAGE NamedFieldPuns #-}
 
 module Day01 where
-    import Data.Attoparsec.Text (Parser, endOfLine, sepBy1, decimal)
+    import Parsing as P hiding (take)
     import Data.List (sortBy)
 
     import Common (solveDay, Day(Day))
