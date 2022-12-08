@@ -54,5 +54,21 @@ module Toolbox where
     findSublist :: Int -> ([a] -> Bool) -> [a] -> Maybe Int
     findSublist n f = window n .> findIndex f .> fmap (+n)
 
+    splitAround :: Int -> [a] -> ([a], a, [a])
+    splitAround i xs = (take i xs, xs!!i, drop (i+1) xs)
+
+    count :: (a -> Bool) -> [a] -> Int
+    count p = filter p .> length
+
+    countTrue :: [Bool] -> Int
+    countTrue = count id
+
+    -- | Like takeWhile, but includes the first element that violates the predicate.
+    takeWhile' :: (a -> Bool) -> [a] -> [a]
+    takeWhile' _ [] = []
+    takeWhile' p (x:xs)
+        | p x = x : (takeWhile' p xs)
+        | otherwise = [x]
+
     (.>) :: (a -> b) -> (b -> c) -> (a -> c)
     (.>) = flip (.)
