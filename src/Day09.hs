@@ -23,9 +23,9 @@ module Day09 where
     move L (x, y) = (x - 1, y)
     move D (x, y) = (x, y - 1)
 
-    -- |Not proud of this function, but it does the job. Maybe some maths could get follow' working tho
-    follow :: (Int, Int) -> (Int, Int) -> (Int, Int)
-    follow h@(hx, hy) t@(tx, ty)
+    -- |Old implementation, quick and dirty
+    follow' :: (Int, Int) -> (Int, Int) -> (Int, Int)
+    follow' h@(hx, hy) t@(tx, ty)
         | (abs (hx - tx) <= 1) && (abs (hy - ty) <= 1) = t
         | (abs (hx - tx) <= 1) && hy > ty + 1 = (hx, hy - 1)
         | (abs (hx - tx) <= 1) && hy < ty - 1 = (hx, hy + 1)
@@ -37,25 +37,20 @@ module Day09 where
         | hx < tx - 1 && hy < ty - 1 = (hx + 1, hy + 1)
         | otherwise = error ("follow broke on " ++ (show h) ++ " " ++ (show t))
 
-    follow' :: (Int, Int) -> (Int, Int) -> (Int, Int)
-    follow' h@(hx, hy) t@(tx, ty) = (go hx tx, go hy ty)
-        where go a b
-                | abs (a - b) <= 1 = b
-                | a > b + 1 = b + 1
-                | a < b - 1 = b - 1
-                | otherwise = error ("follow broke on " ++ (show h) ++ " " ++ (show t))
+    follow :: (Int, Int) -> (Int, Int) -> (Int, Int)
+    follow h@(hx, hy) t@(tx, ty) = if abs (hx - tx) <= 1 && abs (hy - ty) <= 1 then t else (go hx tx, go hy ty)
+        where go a b = if abs (a - b) == 0 then b else b + signum (a - b)
 
     solve1 :: Day09 -> Int
     solve1 = foldl step ((0,0), [(0, 0)]) .> snd .> nub .> length
-        -- step :: ((Int, Int), [(Int, Int)]) -> (Direction, Int) -> ((Int, Int), [(Int, Int)])
         where   step (h, (t:ts)) (d, 0) = (h, (t:ts))
                 step (h, (t:ts)) (d, n) = let h' = move d h in step (h', follow h' t : (t:ts)) (d, n - 1)
     
     solve2 :: Day09 -> Int
     solve2 = foldl step (replicate 9 (0, 0), [(0,0)]) .> snd .> nub .> length
-        -- step :: ([(Int, Int)], [(Int, Int)]) -> (Direction, Int) -> ([(Int, Int)], [(Int, Int)])
         where   step (h:hs, t:ts) (d, 0) = (h:hs, t:ts)
-                step (h:hs, t:ts) (d, n) = let h' = move d h; hs' = scanl1 follow (h':hs) in step (hs', follow (last hs') t : (t:ts)) (d, n - 1)
+                step (h:hs, t:ts) (d, n) = let h' = move d h; hs' = scanl1 follow (h':hs) 
+                                            in step (hs', follow (last hs') t : (t:ts)) (d, n - 1)
 
     day09 = Day testCases puzzle solve1 solve2
 

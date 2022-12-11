@@ -6,6 +6,12 @@ module Toolbox where
 
     uncurry3 f (a, b, c) = f a b c
 
+    fst3 (x, _, _) = x
+
+    snd3 (_, x, _) = x
+
+    trd3 (_, _, x) = x
+
     fun :: (Show a, Eq a) => [(a, b)] -> a -> b
     fun fs x = case lookup x fs of 
         Just y -> y
@@ -20,6 +26,13 @@ module Toolbox where
     match ((x:xs):yss)
         | all (\ys -> x `elem` ys) yss = Just x
         | otherwise = match $ xs:yss
+
+    elem' :: (Eq a, Ord a) => a -> [a] -> Bool
+    elem' x [] = False
+    elem' x (x':xs)
+        | x > x' = False
+        | x == x' = True
+        | otherwise = elem' x xs
 
     chunk :: Int -> [a] -> [[a]]
     chunk _ [] = []
