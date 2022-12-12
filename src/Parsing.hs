@@ -37,6 +37,7 @@ module Parsing (
     T.takeTill,
     T.takeWhile,
     T.takeWhile1,
+    ord,
 
     parse,
     parseTest,
@@ -59,6 +60,7 @@ module Parsing (
     import Control.Applicative ((<|>))
     import Data.Attoparsec.Text (Parser, (<?>))
     import qualified Data.Attoparsec.Text as T
+    import Data.Char (ord)
     import Data.Text (pack, unpack)
     import Text.Regex (mkRegex, matchRegexAll)
 
