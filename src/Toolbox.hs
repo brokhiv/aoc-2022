@@ -1,5 +1,5 @@
 module Toolbox where
-    import Data.List (findIndex, foldl', nub)
+    import Data.List (elemIndex, findIndex, foldl', nub)
     import Data.Text (pack, unpack)
 
     infixr 0 .>
@@ -63,6 +63,9 @@ module Toolbox where
     window n (x:xs) 
         | length xs < n = []
         | otherwise = take n (x:xs) : (window n xs)
+
+    indexed :: [a] -> [(Int, a)]
+    indexed = zip [0..]
 
     findSublist :: Int -> ([a] -> Bool) -> [a] -> Maybe Int
     findSublist n f = window n .> findIndex f .> fmap (+n)
