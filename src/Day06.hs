@@ -8,18 +8,18 @@ module Day06 where
 
     test = ["mjqjpqmgbljsphdztnvjfqwrcgsmlb", "bvwbjplbgvbhsrlpgdmjqwftvncz", "nppdvjthqldpwncqszvftbrmjlhg", "nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg", "zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw"]
         
-    testCases = (zipWith (\t e -> (t, solve1, e)) test [7, 5, 6, 10, 11]) ++ (zipWith (\t e -> (t, solve2, e)) test [19, 23, 23, 29, 26])
+    testCases = (zipWith (\t e -> (t, solve1, show e)) test [7, 5, 6, 10, 11]) ++ (zipWith (\t e -> (t, solve2, show e)) test [19, 23, 23, 29, 26])
 
     type Day06 = String
 
     puzzle :: Parser Day06
     puzzle = unpack <$> takeWhile1 (const True)
 
-    solve1 :: Day06 -> Int
-    solve1 = findSublist 4 distinct .> fromJust
+    solve1 :: Day06 -> String
+    solve1 = findSublist 4 distinct .> fromJust .> show
     
-    solve2 :: Day06 -> Int
-    solve2 = findSublist 14 distinct .> fromJust
+    solve2 :: Day06 -> String
+    solve2 = findSublist 14 distinct .> fromJust .> show
 
     day06 = Day testCases puzzle solve1 solve2
 

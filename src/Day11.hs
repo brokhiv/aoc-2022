@@ -14,14 +14,14 @@ module Day11 where
     puzzle :: Parser Day11
     puzzle = sepBy1 monkey (endOfLine *> endOfLine)
         where   monkey = Monkey <$> (string "Monkey " *> digit *> char ':' *> skipSpace *> string "Starting items: " *> (sepBy decimal $ string ", ")) 
-                                <*> (skipSpace *> "Operation: " *> operation) <*> (next)
-                operation = _
-                next = _
+                                <*> (skipSpace *> string "Operation: " *> operation) <*> (next)
+                operation = undefined
+                next = undefined
     
-    solve1 :: Day11 -> Integer
+    solve1 :: Day11 -> String
     solve1 xs = undefined
     
-    solve2 :: Day11 -> Integer
+    solve2 :: Day11 -> String
     solve2 xs = undefined
 
     day11 = Day testCases puzzle solve1 solve2

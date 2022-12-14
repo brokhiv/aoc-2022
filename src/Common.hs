@@ -6,25 +6,25 @@ module Common where
     import Parsing
     import Toolbox (uncurry3)
 
-    type TestCase a b = (String, a -> b, b)
+    type TestCase a = (String, a -> String, String)
 
-    data Day a b = Day {
-        testCases :: [TestCase a b],
+    data Day a = Day {
+        testCases :: [TestCase a],
         puzzle :: Parser a,
-        solve1 :: a -> b,
-        solve2 :: a -> b
+        solve1 :: a -> String,
+        solve2 :: a -> String
     }
 
-    runTests :: Show b => Day a b -> [IO ()]
+    runTests :: Day a -> [IO ()]
     runTests day = map (uncurry3 runTest) $ testCases day
-        where runTest s f e = putStrLn $ "Expected: " ++ (show e) ++ ", got: " ++ ((show . f) $ parse (puzzle day) s)
+        where runTest s f e = do { putStrLn $ "Expected:"; putStrLn e; putStrLn $ "Got:\n" ++ (f $ parse (puzzle day) s) ++ "\n"}
 
-    getParsedInput :: Day a b -> String -> IO a
+    getParsedInput :: Day a -> String -> IO a
     getParsedInput day inputFile = do
         input <- readFile inputFile
         return $ parse (puzzle day) input
 
-    solveDay :: Show b => Day a b -> String -> IO ()
+    solveDay :: Day a -> String -> IO ()
     solveDay day inputFile = do
         let tests = runTests day
         parsedInput <- getParsedInput day inputFile
@@ -32,6 +32,6 @@ module Common where
         putStrLn "Running tests..."
         sequence tests
         putStrLn "Tests done\n"
-        putStrLn $ "Part 1: " ++ (show $ (solve1 day) parsedInput)
-        putStrLn $ "Part 2: " ++ (show $ (solve2 day) parsedInput)
+        putStrLn $ "Part 1:\n" ++ ((solve1 day) parsedInput)
+        putStrLn $ "Part 2:\n" ++ ((solve2 day) parsedInput)
         -- return parsedInput

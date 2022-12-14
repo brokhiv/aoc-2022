@@ -1,15 +1,20 @@
+{-# LANGUAGE ScopedTypeVariables #-}
+
 module Toolbox where
-    import Data.List (elemIndex, findIndex, foldl', nub)
+    import Data.List (elemIndex, findIndex, foldl', insert, nub)
     import Data.Text (pack, unpack)
 
-    infixr 0 .>
+    infixr 0 .>, $*
+    infixr 8 $^
+
+    pair (a, b) = [a,b]
+    triple (a, b, c) = [a, b, c]
+    quad (a, b, c, d) = [a, b, c, d]
 
     uncurry3 f (a, b, c) = f a b c
 
     fst3 (x, _, _) = x
-
     snd3 (_, x, _) = x
-
     trd3 (_, _, x) = x
 
     fun :: (Show a, Eq a) => [(a, b)] -> a -> b
@@ -55,8 +60,15 @@ module Toolbox where
     insertWith _ x [] = [x]
     insertWith f x (x':xs) = if f x <= f x' then x:x':xs else x' : (insertWith f x xs)
 
+    insertAll :: Ord a => [a] -> [a] -> [a]
+    insertAll [] ys = ys
+    insertAll (x:xs) ys = insertAll xs $ insert x ys 
+
     distinct :: Eq a => [a] -> Bool
     distinct xs = xs == nub xs
+
+    paired :: [a] -> [(a, a)]
+    paired xs = zip xs $ tail xs
 
     window :: Int -> [a] -> [[a]]
     window _ [] = []
@@ -89,22 +101,27 @@ module Toolbox where
     manhattan :: Num a => (a, a) -> (a, a) -> a
     manhattan (x1, y1) (x2, y2) = abs (x1 - x2) + abs (y1 - y2)
 
-    astar :: Eq a => [(a, a)] -> a -> a -> (a -> a -> Int) -> Maybe [a]
-    astar g s e h = astar' [((s, h s e), 0)] [] [(s, 0)] []
-        where   next g n = map snd $ filter ((== n) . fst) g
-                findPath ps n = if n `elem` (map fst ps) then findPath ps (expectJust "Nothing in findPath" $ lookup n ps) ++ [n] else []
+    astar :: (Eq a, Show a) => (a -> [a]) -> a -> a -> (a -> a -> Int) -> IO (Maybe [a])
+    astar g s e h = astar' [((s, 0), h s e)] [] [(s, 0)] []
+        where   findPath ps n = if n `elem` (map fst ps) then findPath ps (expectJust "Nothing in findPath" $ lookup n ps) ++ [n] else []
                 astar' q vs cs ps
-                    | null q = Nothing
-                    | n == e = Just $ findPath ps n
+                    | null q = do {putStr "Visited: "; print vs; return Nothing}
+                    | n == e = do { return $ Just $ findPath ps n }
                     | n `elem` vs = astar' q' vs cs ps
-                    | otherwise = let expand = [(n', c', h n' e) | n' <- next g n, n' `notElem` vs, let c' = c + 1, (n' `notElem` (map fst cs)) || c' < expectJust "Nothing in expand" (lookup n' cs)] 
-                                    in astar' 
+                    | otherwise = let expand = [(n', c', h n' e) | n' <- g n, n' `notElem` vs, let c' = c + 1, (n' `notElem` (map fst cs)) || c' < expectJust "Nothing in expand" (lookup n' cs)] 
+                                    in do {putStr ("Expanding " ++ (show n) ++ ": "); print expand; astar' 
                                         (foldl' (\xs (x, y, z) -> insertWith snd ((x, y), y + z) xs) q' expand)
                                         (nub $ n : vs)
                                         (cs ++ (map (\(x, y, _) -> (x, y)) expand))
-                                        (ps ++ (map (\(x, _, _) -> (x, n))) expand)
+                                        (ps ++ (map (\(x, _, _) -> (x, n))) expand) }
                     where (((n, c), _), q') = (head q, tail q)
-            
 
     (.>) :: (a -> b) -> (b -> c) -> (a -> c)
     (.>) = flip (.)
+
+    ($^) :: (a -> a) -> Int -> (a -> a)
+    f $^ 0 = id
+    f $^ n = f . (f $^ (n-1))
+
+    ($*) :: Eq a => (a -> a) -> a -> a
+    f $* x = if f x == x then x else f $* (f x)

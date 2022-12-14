@@ -8,7 +8,7 @@ module Day03 where
 
     test = "vJrwpWtwJgWrhcsFMMfFFhFp\njqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL\nPmmdzqPrVvPwwTWBwg\nwMqvLMZHhHMvwLHjbvcjnnSBnvTQFn\nttgJtRGJQctTZtZT\nCrZsJsPPZsGzwwsLwLmpwMDw"
         
-    testCases = [(test, solve1, 157), (test, solve2, 70)]
+    testCases = [(test, solve1, show 157), (test, solve2, show 70)]
 
     type Day03 = [[Char]]
 
@@ -20,11 +20,11 @@ module Day03 where
         | isLower c = toInteger (ord c) - 96
         | otherwise = toInteger (ord c) - 38
 
-    solve1 :: Day03 -> Integer
-    solve1 = map (halve .> match .> fmap priority .> (?: 0)) .> sum
+    solve1 :: Day03 -> String
+    solve1 = map (halve .> match .> fmap priority .> (?: 0)) .> sum .> show
     
-    solve2 :: Day03 -> Integer
-    solve2 = chunk 3 .> map (match .> fmap priority .> (?: 0)) .> sum
+    solve2 :: Day03 -> String
+    solve2 = chunk 3 .> map (match .> fmap priority .> (?: 0)) .> sum .> show
 
     day03 = Day testCases puzzle solve1 solve2
 

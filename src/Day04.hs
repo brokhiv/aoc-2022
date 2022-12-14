@@ -7,7 +7,7 @@ module Day04 where
 
     test = "2-4,6-8\n2-3,4-5\n5-7,7-9\n2-8,3-7\n6-6,4-6\n2-6,4-8"
         
-    testCases = [(test, solve1, 2)]
+    testCases = [(test, solve1, show 2)]
 
     type Day04 = [((Integer, Integer),(Integer, Integer))]
 
@@ -16,12 +16,12 @@ module Day04 where
         where   pair = (,) <$> assignment <*> (char ',' *> assignment)
                 assignment = (,) <$> decimal <*> (char '-' *> decimal)
     
-    solve1 :: Day04 -> Int
-    solve1 = filter (\(x, y) -> x `contains` y || y `contains` x) .> length
+    solve1 :: Day04 -> String
+    solve1 = filter (\(x, y) -> x `contains` y || y `contains` x) .> length .> show
         where contains (xMin, xMax) (yMin, yMax) = (xMin <= yMin && xMax >= yMax)
     
-    solve2 :: Day04 -> Int
-    solve2 = filter (uncurry overlap) .> length
+    solve2 :: Day04 -> String
+    solve2 = filter (uncurry overlap) .> length .> show
         where overlap (xMin, xMax) (yMin, yMax) = not $ null $ [xMin..xMax] `intersect` [yMin..yMax]
 
     day04 = Day testCases puzzle solve1 solve2

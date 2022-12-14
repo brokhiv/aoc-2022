@@ -8,7 +8,7 @@ module Day07 where
 
     test = "$ cd /\n$ ls\ndir a\n14848514 b.txt\n8504156 c.dat\ndir d\n$ cd a\n$ ls\ndir e\n29116 f\n2557 g\n62596 h.lst\n$ cd e\n$ ls\n584 i\n$ cd ..\n$ cd ..\n$ cd d\n$ ls\n4060174 j\n8033020 d.log\n5626152 d.ext\n7214296 k"
         
-    testCases = [(test, solve1, 95437), (test, solve2, 24933642)]
+    testCases = [(test, solve1, show 95437), (test, solve2, show 24933642)]
 
     type Day07 = [Command]
 
@@ -47,15 +47,15 @@ module Day07 where
         where   isDir (File _ _) = False
                 isDir (Dir _ _) = True
 
-    solve1 :: Day07 -> Integer
-    solve1 = foldl cmd (Dir [] "/", []) .> fst .> (flip findDirs (\d -> size d <= 100000)) .> map size .> sum
+    solve1 :: Day07 -> String
+    solve1 = foldl cmd (Dir [] "/", []) .> fst .> (flip findDirs (\d -> size d <= 100000)) .> map size .> sum .> show
         where   cmd (sys, _) (CD "/") = (sys, [])
                 cmd (sys, ps) (CD "..") = (sys, init ps)
                 cmd (sys, ps) (CD p) = (sys, ps ++ [p])
                 cmd (sys, ps) (LS fs) = (insert fs ps sys, ps)
     
-    solve2 :: Day07 -> Integer
-    solve2 = foldl cmd (Dir [] "/", []) .> fst .> (\s -> ((flip findDirs (const True)) .> map size .> filter (>= 30000000 - (70000000 - size s))) s) .> minimum
+    solve2 :: Day07 -> String
+    solve2 = foldl cmd (Dir [] "/", []) .> fst .> (\s -> ((flip findDirs (const True)) .> map size .> filter (>= 30000000 - (70000000 - size s))) s) .> minimum .> show
         where   cmd (sys, _) (CD "/") = (sys, [])
                 cmd (sys, ps) (CD "..") = (sys, init ps)
                 cmd (sys, ps) (CD p) = (sys, ps ++ [p])

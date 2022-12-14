@@ -8,7 +8,7 @@ module Day02 where
 
     test = "A Y\nB X\nC Z"
 
-    testCases = [(test, solve1, 15), ((test, solve2, 12))] 
+    testCases = [(test, solve1, show 15), ((test, solve2, show 12))] 
 
     -- First implementation based on integers and offset modulo arithmetic --
 
@@ -54,8 +54,8 @@ module Day02 where
         where   parseRound = (\s r -> (strategy s, r)) <$> set "ABC" <*> (space *> set "XYZ")
                 strategy = fun [('A', Rock), ('B', Paper), ('C', Scissors)]
 
-    solve1 :: [(Strategy, Char)] -> Integer
-    solve1 = map (fmap (fun [('X', Rock), ('Y', Paper), ('Z', Scissors)]) .> uncurry eval) .> sum
+    solve1 :: [(Strategy, Char)] -> String
+    solve1 = map (fmap (fun [('X', Rock), ('Y', Paper), ('Z', Scissors)]) .> uncurry eval) .> sum .> show
         where eval s r = score r + case compare r s of
                 LT -> 0
                 EQ -> 3
@@ -68,8 +68,8 @@ module Day02 where
     pick Scissors LT = Paper
     pick Paper LT = Rock
 
-    solve2 :: [(Strategy, Char)] -> Integer
-    solve2 = map (fmap (fun [('X', LT), ('Y', EQ), ('Z', GT)]) .> uncurry eval) .> sum
+    solve2 :: [(Strategy, Char)] -> String
+    solve2 = map (fmap (fun [('X', LT), ('Y', EQ), ('Z', GT)]) .> uncurry eval) .> sum .> show
         where eval s r = score (pick s r) + case r of
                 LT -> 0
                 EQ -> 3
