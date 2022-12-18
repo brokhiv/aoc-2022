@@ -5,7 +5,6 @@ module Parsing (
     T.anyChar,
     T.char,
     T.choice,
-    T.count,
     T.decimal,
     T.digit,
     T.double,
@@ -39,6 +38,8 @@ module Parsing (
     T.takeWhile1,
     ord,
 
+    countP,
+
     parse,
     parseTest,
     set,
@@ -55,7 +56,11 @@ module Parsing (
     braces,
     angles,
     apos,
-    quotes
+    quotes,
+    sepBy2,
+    sepBy3,
+    sepBy4,
+    sepBy5
 ) where
     import Control.Applicative ((<|>))
     import Data.Attoparsec.Text (Parser, (<?>))
@@ -63,6 +68,9 @@ module Parsing (
     import Data.Char (ord)
     import Data.Text (pack, unpack)
     import Text.Regex (mkRegex, matchRegexAll)
+
+    countP :: Int -> Parser a -> Parser [a]
+    countP = T.count
 
     parse :: Parser a -> String -> a
     parse p text = case (T.parseOnly p $ pack text) of 
@@ -117,4 +125,14 @@ module Parsing (
     quotes :: Parser a -> Parser a
     quotes = between2 (T.char '"')
 
+    sepBy2 :: Parser a -> Parser b -> Parser s -> Parser (a, b)
+    sepBy2 a b s = (,) <$> a <*> (s *> b)
 
+    sepBy3 :: Parser a -> Parser b -> Parser c -> Parser s -> Parser (a, b, c)
+    sepBy3 a b c s = (,,) <$> a <*> (s *> b) <*> (s *> c)
+
+    sepBy4 :: Parser a -> Parser b -> Parser c -> Parser d -> Parser s -> Parser (a, b, c, d)
+    sepBy4 a b c d s = (,,,) <$> a <*> (s *> b) <*> (s *> c) <*> (s *> d)
+
+    sepBy5 :: Parser a -> Parser b -> Parser c -> Parser d -> Parser e -> Parser s -> Parser (a, b, c, d, e)
+    sepBy5 a b c d e s = (,,,,) <$> a <*> (s *> b) <*> (s *> c) <*> (s *> d) <*> (s *> e)

@@ -3,17 +3,27 @@ module Day17 where
 
     import Common (solveDay, Day(Day))
 
-    test = ""
+    test = ">>><<><>><<<>><>>><<<>>><<<><<<>><>><<>>"
         
-    testCases = []
+    testCases = [(test, solve1, show 3068)]
 
-    type Day17 = ()
+    data Jet = Left | Right deriving (Eq, Show)
+
+    type Day17 = [Jet]
 
     puzzle :: Parser Day17
-    puzzle = undefined
-    
+    puzzle = many1 jet
+        where jet = const Left <$> char '<' <|> const Right <$> char '>'
+
+    rocks = cycle [ [[True, True, True, True]], 
+                    [[False, True, False], [True, True, True], [False, True, False]],
+                    [[False, False, True], [False, False, True], [True, True, True]],
+                    [[True], [True], [True], [True]],
+                    [[True, True], [True, True]]
+                ]
+
     solve1 :: Day17 -> Integer
-    solve1 xs = undefined
+    solve1 = undefined
     
     solve2 :: Day17 -> Integer
     solve2 xs = undefined

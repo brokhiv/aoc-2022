@@ -1,7 +1,7 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
 module Toolbox where
-    import Data.List (elemIndex, findIndex, foldl', insert, nub)
+    import Data.List ((\\), elemIndex, findIndex, foldl', insert, nub, sort)
     import Data.Text (pack, unpack)
 
     infixr 0 .>, $*
@@ -97,6 +97,10 @@ module Toolbox where
     takeWhile' p (x:xs)
         | p x = x : (takeWhile' p xs)
         | otherwise = [x]
+
+    maximal, minimal :: Ord a => Int -> [a] -> [a]
+    maximal n xs = take n $ reverse $ sort xs
+    minimal n xs = take n $ sort xs
 
     manhattan :: Num a => (a, a) -> (a, a) -> a
     manhattan (x1, y1) (x2, y2) = abs (x1 - x2) + abs (y1 - y2)
