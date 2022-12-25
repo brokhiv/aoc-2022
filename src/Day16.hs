@@ -14,7 +14,7 @@ module Day16 where
 
     puzzle :: Parser Day16
     puzzle = linesP valve
-        where valve = (\v f t -> (Valve v f, t)) <$> (string "Valve " *> countP 2 letter) <*> (string " has flow rate=" *> decimal) <*> (string "; tunnel" *> maybeP (char 's') *> string "lead" *> maybeP (char 's') *> string " to valves " *> sepBy1 (countP 2 letter) (string ", "))
+        where valve = (\v f t -> (Valve v f, t)) <$> (string "Valve " *> countP 2 letter) <*> (string " has flow rate=" *> decimal) <*> (string "; tunnel" *> (maybeP $ char 's') *> string " lead" *> (maybeP $ char 's') *> string " to valve" *> (maybeP $ char 's') *> space *> sepBy1 (countP 2 letter) (string ", "))
     
     solve1 :: Day16 -> String
     solve1 xs = undefined

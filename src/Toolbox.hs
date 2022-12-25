@@ -4,18 +4,33 @@ module Toolbox where
     import Data.List ((\\), elemIndex, findIndex, foldl', insert, nub, sort)
     import Data.Text (pack, unpack)
 
+    infixl 7 %
     infixr 0 .>, $*
     infixr 8 $^
 
     pair (a, b) = [a,b]
     triple (a, b, c) = [a, b, c]
     quad (a, b, c, d) = [a, b, c, d]
+    quint (a, b, c, d, e) = [a, b, c, d, e]
 
     uncurry3 f (a, b, c) = f a b c
+    uncurry4 f (a, b, c, d) = f a b c d
+    uncurry5 f (a, b, c, d, e) = f a b c d e
 
     fst3 (x, _, _) = x
     snd3 (_, x, _) = x
     trd3 (_, _, x) = x
+
+    fst4 (x, _, _, _) = x
+    snd4 (_, x, _, _) = x
+    trd4 (_, _, x, _) = x
+    frt4 (_, _, _, x) = x
+
+    fst5 (x, _, _, _, _) = x
+    snd5 (_, x, _, _, _) = x
+    trd5 (_, _, x, _, _) = x
+    frt5 (_, _, _, x, _) = x
+    fft5 (_, _, _, _, x) = x
 
     fun :: (Show a, Eq a) => [(a, b)] -> a -> b
     fun fs x = case lookup x fs of 
@@ -82,8 +97,17 @@ module Toolbox where
     findSublist :: Int -> ([a] -> Bool) -> [a] -> Maybe Int
     findSublist n f = window n .> findIndex f .> fmap (+n)
 
+    split :: Eq a => a -> [a] -> ([a], [a])
+    split x xs = let (_:xs') = dropWhile (/= x) xs in (takeWhile (/= x) xs, xs')
+
     splitAround :: Int -> [a] -> ([a], a, [a])
     splitAround i xs = (take i xs, xs!!i, drop (i+1) xs)
+
+    insertAt :: Int -> a -> [a] -> [a]
+    insertAt i x xs = let (ls, rs) = (take i xs, drop i xs) in ls ++ x : rs
+
+    deleteAt :: Int -> [a] -> [a]
+    deleteAt i xs = let (ls, (_:rs)) = splitAt i xs in ls ++ rs
 
     count :: (a -> Bool) -> [a] -> Int
     count p = filter p .> length
@@ -119,6 +143,9 @@ module Toolbox where
                                         (cs ++ (map (\(x, y, _) -> (x, y)) expand))
                                         (ps ++ (map (\(x, _, _) -> (x, n))) expand) }
                     where (((n, c), _), q') = (head q, tail q)
+
+    (%) :: Integral a => a -> a -> a
+    a % b = (a `mod` b + b) `mod` b
 
     (.>) :: (a -> b) -> (b -> c) -> (a -> c)
     (.>) = flip (.)

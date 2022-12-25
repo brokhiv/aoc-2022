@@ -99,7 +99,7 @@ module Parsing (
     skipHSpace = T.skipWhile T.isHorizontalSpace
 
     maybeP :: Parser a -> Parser (Maybe a)
-    maybeP p = Just <$> p <|> pure Nothing
+    maybeP p = T.option Nothing (Just <$> p)
 
     between :: Parser o -> Parser c -> Parser a -> Parser a
     between o c a = o *> a <* c
